@@ -1,0 +1,73 @@
+
+<h1 >Tỉ giá tiền tệ ngân hàng Đông Á</h1>
+
+<?php
+    $result = $block->getMoneyInformation();
+?>
+
+<div id="conver-gr">
+	<div style="display: flex; justify-content: center;">
+		<select id="from" style="margin: 8px; width: 120px; margin-right:0px">
+			<option value="1">VND</option>
+		</select>
+		<input style="margin: 8px; width: 120px;" type="text" name="" id="ip-from">
+		
+	</div>
+	<div style="text-align: center;">
+		<b>Chuyển sang</b>
+	</div>
+	<div style="display: flex; justify-content: center;">
+		<select id="to" style="margin: 8px; width: 120px; margin-right:0px ">
+			<option value="1">VND</option>
+		</select>
+		
+		<input style="margin: 8px; width: 120px;" type="text" name="" id="ip-to">
+	</div>
+	<button style="margin: auto;" id="bt-convert">Chuyển</button>
+</div>
+<table>
+	<thead>
+		<th>Mã tiền mặt</th>
+		<th>Mua tiền mặt</th>
+		<th>Bán tiền mặt</th>
+		<th>Mua chuyển khoản</th>
+		<th>Bán chuyển khoản</th>
+		<th>Quốc gia</th>
+	</thead>
+	<tbody id="body-table">
+	</tbody>
+</table>
+<script type="text/javascript">
+    require(["jquery"],function($) {
+
+        $(document).ready(function() {
+        	class Money{
+            	bindData(data){
+            		$.each(data, function(index, val) {
+            			 $("#body-table").append(`<tr><td>${val.type}</td><td>${val.muatienmat}</td><td>${val.bantienmat}</td><td>${val.muack}</td><td>${val.banck}</td><td><img src="${val.imageurl}" alt=""></td></tr>`);
+            			 $("#from").append(`<option value="${val.muatienmat}">${val.type}</option>`);
+            			 $("#to").append(`<option value="${val.muatienmat}">${val.type}</option>`);
+            		});
+
+            	}
+
+            	convert(){
+            		var text = parseInt($("#ip-from").val());
+            		var heso1 = parseInt($("#from").val());
+            		var heso2 = parseInt($("#to").val());
+            		$("#ip-to").val(text*heso1/heso2)
+            	}
+            }
+
+			var money = new Money();
+			var data = <?php echo "$result" ?>;
+            money.bindData(data["items"]);  
+
+            $("#bt-convert").click(function(event) {
+            	money.convert();
+            });
+
+
+        });
+    });
+</script>
